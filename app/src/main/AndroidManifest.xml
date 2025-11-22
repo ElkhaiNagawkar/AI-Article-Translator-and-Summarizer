@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.INFO5126FinalProject">
         <activity
+            android:name=".SummarizationActivity"
+            android:exported="false" />
+        <activity
             android:name=".DescriptionActivity"
             android:exported="false" />
         <activity

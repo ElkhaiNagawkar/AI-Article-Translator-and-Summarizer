@@ -42,5 +42,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun onClickSummarizeActivity(view: View){
+        val intent = Intent(this, SummarizationActivity::class.java).apply { }
+        startActivity(intent)
+    }
+
 
 }
