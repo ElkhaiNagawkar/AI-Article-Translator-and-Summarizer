@@ -9,7 +9,9 @@
     </string>
     <string name="HomeText">Back to Home Page</string>
     <string name="groupMembers"><b>Group Members:\n\n</b>Name: Elkhai Nagawkar\nSection: 02\n</string>
-    <string name="summarizeTitle">Translate or Summarize Article</string>
+    <string name="summarizeTitle">Translate and Summarize Article</string>
+    <string name="articleTitle">Article Title</string>
     <string name="articleInputHint">Paste your article here</string>
-    <string name="TranslateButtonText">Translate Article</string>
+    <string name="TranslateAndSummarizeButton">Translate and summarize Article</string>
+    <string name="ArticleHistoryHeader"><b>Article History</b></string>
 </resources>
