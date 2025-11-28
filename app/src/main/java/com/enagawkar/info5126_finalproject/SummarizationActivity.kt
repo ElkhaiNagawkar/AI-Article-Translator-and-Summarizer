@@ -8,16 +8,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.enagawkar.info5126_finalproject.databinding.ActivitySummarizationBinding
+import com.enagawkar.info5126_finalproject.viewModel.MainViewModel
 import com.google.mlkit.nl.languageid.LanguageIdentification
 
 class SummarizationActivity : AppCompatActivity() {
     lateinit var summarizationBinding: ActivitySummarizationBinding
+    lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         summarizationBinding = ActivitySummarizationBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_summarization)
+        setContentView(summarizationBinding.root)
         //setContentView(R.layout.activity_summarization)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -25,24 +29,16 @@ class SummarizationActivity : AppCompatActivity() {
             insets
         }
 
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
-
     fun onClickTransAndSum(view: View){
-        val text = summarizationBinding.articleText.toString()
-        val languageIndetif = LanguageIdentification.getClient()
-        languageIndetif.identifyLanguage( text)
-            .addOnSuccessListener { languageCode ->
-                if(languageCode == "und"){
-                    println("cant")
-                }else {
-                    val intent = Intent(this, ArticleHistory::class.java).apply {
-                        putExtra("lang",languageCode)
-                    }
-                    startActivity(intent)
-                }
-            }
-            .addOnFailureListener {
-                println("cant load")
-            }
+        mainViewModel.translateAndSummarize(
+            summarizationBinding.artcileTitle.text.toString(),
+            summarizationBinding.articleText.text.toString()
+        )
+
+        val intent = Intent(this, ArticleHistory::class.java)
+
+        startActivity(intent)
     }
 }

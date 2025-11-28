@@ -33,7 +33,7 @@ class RecyclerAdapter(private val data: List<ArticleData>) : RecyclerView.Adapte
         position: Int
     ) {
         viewHolder.headerText.setText((data.get(position).title).toString())
-        viewHolder.bodyText.setText((data.get(position).body).toString())
+        viewHolder.bodyText.setText((data.get(position).summary).toString())
     }
 
     override fun getItemCount(): Int {

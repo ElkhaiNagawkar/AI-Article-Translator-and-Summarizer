@@ -5,13 +5,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.enagawkar.info5126_finalproject.databinding.ActivityArticleHistoryBinding
+import com.enagawkar.info5126_finalproject.model.ArticleData
+import com.enagawkar.info5126_finalproject.viewModel.MainViewModel
 
 class ArticleHistory : AppCompatActivity() {
     lateinit var recyclerViewManager: RecyclerView.LayoutManager
     lateinit var historyBinding: ActivityArticleHistoryBinding
+    lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,11 +28,18 @@ class ArticleHistory : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         recyclerViewManager = LinearLayoutManager(applicationContext)
         historyBinding.recyclerView.setLayoutManager(recyclerViewManager)
         historyBinding.recyclerView.setHasFixedSize(true)
 
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        mainViewModel.listOfArticles.observe(this){
+            articleData ->
+            historyBinding.recyclerView.adapter = RecyclerAdapter(articleData)
+        }
+
+        //NEED TO ADD IN () THE DATA
         //historyBinding.recyclerView.adapter = RecyclerAdapter()
     }
 }
