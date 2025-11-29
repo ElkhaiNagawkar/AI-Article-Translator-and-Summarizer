@@ -9,11 +9,21 @@ import com.enagawkar.info5126_finalproject.model.ArticleData
 import com.google.mlkit.nl.languageid.LanguageIdentification
 
 class MainViewModel : ViewModel() {
-    var listOfArticles = MutableLiveData<List<ArticleData>>(listOf<ArticleData>())
+
+    companion object ArticleObject {
+        var listOfArticles = MutableLiveData<List<ArticleData>>(listOf<ArticleData>())
+
+        fun addArticle(article: ArticleData){
+            ArticleObject.listOfArticles.postValue(ArticleObject.listOfArticles.value?.toMutableList()?.apply { add(article) })
+        }
+    }
+
+    var listOfArticles = ArticleObject.listOfArticles
     var langCode = ""
 
     public fun translateAndSummarize(title: String, body: String) {
-        //val tempList = listOfArticles.value!!.toMutableList()
+        val tempList = listOfArticles.value!!.toMutableList()
+        var newArt: ArticleData? = null
 
         val languageIndetif = LanguageIdentification.getClient()
         languageIndetif.identifyLanguage(title)
@@ -22,14 +32,15 @@ class MainViewModel : ViewModel() {
                     println("cant")
                 } else {
                     langCode = languageCode.toString()
-                    listOfArticles.value = listOfArticles.value.orEmpty() + ArticleData(languageCode, languageCode, languageCode)
-                    print(listOfArticles.value)
+                    newArt = ArticleData(languageCode, languageCode, languageCode)
+                    println(newArt)
+                    ArticleObject.addArticle(newArt)
+                    println(listOfArticles.value)
+
                 }
             }
             .addOnFailureListener {
                 println("cant load")
             }
-
-
     }
 }

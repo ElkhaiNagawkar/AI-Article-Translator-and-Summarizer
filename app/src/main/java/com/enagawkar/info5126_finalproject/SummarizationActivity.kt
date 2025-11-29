@@ -30,15 +30,17 @@ class SummarizationActivity : AppCompatActivity() {
         }
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
     }
     fun onClickTransAndSum(view: View){
         mainViewModel.translateAndSummarize(
             summarizationBinding.artcileTitle.text.toString(),
             summarizationBinding.articleText.text.toString()
         )
+    }
 
+    fun nextAct(view: View){
         val intent = Intent(this, ArticleHistory::class.java)
-
         startActivity(intent)
     }
 }

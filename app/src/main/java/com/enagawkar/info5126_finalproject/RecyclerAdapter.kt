@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.enagawkar.info5126_finalproject.model.ArticleData
 
-class RecyclerAdapter(private val data: List<ArticleData>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -37,6 +37,12 @@ class RecyclerAdapter(private val data: List<ArticleData>) : RecyclerView.Adapte
     }
 
     override fun getItemCount(): Int {
+        println("data: " + data)
        return data.size
+    }
+
+    public fun updateUI(newData: List<ArticleData>){
+        data = newData
+        notifyDataSetChanged()
     }
 }

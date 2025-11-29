@@ -34,9 +34,14 @@ class ArticleHistory : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        val list = mutableListOf<ArticleData>()
+        list.add(ArticleData("ELKHAI", "", ""))
+        var testAdapt = RecyclerAdapter(listOf())
+        historyBinding.recyclerView.adapter = testAdapt
+
         mainViewModel.listOfArticles.observe(this){
             articleData ->
-            historyBinding.recyclerView.adapter = RecyclerAdapter(articleData)
+            testAdapt.updateUI(articleData)
         }
 
         //NEED TO ADD IN () THE DATA
