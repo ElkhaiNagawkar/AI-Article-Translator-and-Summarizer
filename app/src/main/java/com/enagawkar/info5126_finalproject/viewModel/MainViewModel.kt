@@ -1,7 +1,9 @@
 package com.enagawkar.info5126_finalproject.viewModel
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.enagawkar.info5126_finalproject.ArticleHistory
 import com.enagawkar.info5126_finalproject.model.ArticleData
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.languageid.LanguageIdentification
@@ -17,6 +19,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel : ViewModel() {
 
+    //need to make a companion object (singleton) so that the same view model is used on all activities
     companion object ArticleObject {
         var listOfArticles = MutableLiveData<List<ArticleData>>(listOf<ArticleData>())
 
@@ -26,9 +29,10 @@ class MainViewModel : ViewModel() {
     }
 
     var listOfArticles = ArticleObject.listOfArticles
+    var newArt: ArticleData? = null
+
 
     public fun translateAndSummarize(title: String, body: String) {
-        var newArt: ArticleData? = null
 
         val languageIndetif = LanguageIdentification.getClient()
         languageIndetif.identifyLanguage(title)
@@ -38,28 +42,8 @@ class MainViewModel : ViewModel() {
                 }
                 else
                 {
-                    val options = TranslatorOptions.Builder()
-                        .setSourceLanguage(TranslateLanguage.fromLanguageTag(languageCode)!!)
-                        .setTargetLanguage(TranslateLanguage.ENGLISH)
-                        .build()
-                    val Translator = Translation.getClient(options)
-
-                    var conditions = DownloadConditions.Builder()
-                        .requireWifi()
-                        .build()
-                    Translator.downloadModelIfNeeded(conditions)
-                        .addOnSuccessListener {
-                            println("downloaded")
-                        }
-                        .addOnFailureListener { exception ->
-                            println("Can't Download")
-                        }
-
-                    Translator.translate(title).addOnSuccessListener {
-                            translatedTitle ->
-                        newArt = ArticleData(translatedTitle, "", "")
-                            ArticleObject.addArticle(newArt)
-                    }
+                    newArt = translateTitleAndBody(title, body, languageCode)
+                    ArticleObject.addArticle( newArt!!)
                 }
             }
             .addOnFailureListener {
@@ -67,16 +51,41 @@ class MainViewModel : ViewModel() {
             }
 
 
+    }
 
-//        if(titleLanguage != "en" || bodyLanguage != "en"){
+    private fun translateTitleAndBody(title: String, body: String, langCode: String): ArticleData{
+        var articleToAdd: ArticleData? = ArticleData("", "", "")
 
-//        }
+        val options = TranslatorOptions.Builder()
+            .setSourceLanguage(TranslateLanguage.fromLanguageTag(langCode)!!)
+            .setTargetLanguage(TranslateLanguage.ENGLISH)
+            .build()
+        val Translator = Translation.getClient(options)
 
+        var conditions = DownloadConditions.Builder()
+            .requireWifi()
+            .build()
+        Translator.downloadModelIfNeeded(conditions)
+            .addOnSuccessListener {
+                println("downloaded")
+            }
+            .addOnFailureListener { exception ->
+                println("Can't Download")
+            }
+
+        Translator.translate(title).addOnSuccessListener {
+                translatedTitle ->
+            articleToAdd?.title = translatedTitle
+        }
+
+        Translator.translate(body).addOnSuccessListener {
+                translatedBody ->
+            articleToAdd?.body = translatedBody
+        }
+
+        return articleToAdd!!
     }
 }
-
-//newArt = ArticleData(titleLanguage, "", "")
-//ArticleObject.addArticle(newArt)
 
 
 
