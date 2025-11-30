@@ -41,8 +41,8 @@ class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapte
        return data.size
     }
 
-    public fun updateUI(newData: List<ArticleData>){
-        data = newData
-        notifyDataSetChanged()
-    }
+//    public fun updateUI(newData: List<ArticleData>){
+//        data = newData
+//        notifyDataSetChanged()
+//    }
 }

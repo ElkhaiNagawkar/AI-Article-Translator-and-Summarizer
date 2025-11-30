@@ -36,10 +36,12 @@ class SummarizationActivity : AppCompatActivity() {
 
     }
     fun onClickTransAndSum(view: View){
-        mainViewModel.translateAndSummarize(
-            summarizationBinding.artcileTitle.text.toString(),
-            summarizationBinding.articleText.text.toString()
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            mainViewModel.translateAndSummarize(
+                summarizationBinding.artcileTitle.text.toString(),
+                summarizationBinding.articleText.text.toString()
+            )
+        }
     }
 
     fun nextAct(view: View){

@@ -20,6 +20,7 @@ class ArticleHistory : AppCompatActivity() {
     lateinit var recyclerViewManager: RecyclerView.LayoutManager
     lateinit var historyBinding: ActivityArticleHistoryBinding
     lateinit var mainViewModel: MainViewModel
+    lateinit var articleStuff: List<ArticleData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +39,14 @@ class ArticleHistory : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        val list = mutableListOf<ArticleData>()
-        list.add(ArticleData("ELKHAI", "", ""))
-        val adapter = RecyclerAdapter(listOf())
-        historyBinding.recyclerView.adapter = adapter
+        articleStuff = listOf<ArticleData>()
+
+
 
         mainViewModel.listOfArticles.observe(this){
-            articleData ->
-            adapter.updateUI(articleData)
+            articleStuff = it
+            historyBinding.recyclerView.adapter = RecyclerAdapter(articleStuff)
         }
 
-        //NEED TO ADD IN () THE DATA
-        //historyBinding.recyclerView.adapter = RecyclerAdapter()
     }
 }
