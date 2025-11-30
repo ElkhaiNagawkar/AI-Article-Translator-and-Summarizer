@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.enagawkar.info5126_finalproject.databinding.ActivitySummarizationBinding
 import com.enagawkar.info5126_finalproject.viewModel.MainViewModel
 import com.google.mlkit.nl.languageid.LanguageIdentification
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SummarizationActivity : AppCompatActivity() {
     lateinit var summarizationBinding: ActivitySummarizationBinding

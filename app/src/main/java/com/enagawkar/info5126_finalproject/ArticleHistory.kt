@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.enagawkar.info5126_finalproject.databinding.ActivityArticleHistoryBinding
 import com.enagawkar.info5126_finalproject.model.ArticleData
 import com.enagawkar.info5126_finalproject.viewModel.MainViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ArticleHistory : AppCompatActivity() {
     lateinit var recyclerViewManager: RecyclerView.LayoutManager
@@ -36,12 +40,12 @@ class ArticleHistory : AppCompatActivity() {
 
         val list = mutableListOf<ArticleData>()
         list.add(ArticleData("ELKHAI", "", ""))
-        var testAdapt = RecyclerAdapter(listOf())
-        historyBinding.recyclerView.adapter = testAdapt
+        val adapter = RecyclerAdapter(listOf())
+        historyBinding.recyclerView.adapter = adapter
 
         mainViewModel.listOfArticles.observe(this){
             articleData ->
-            testAdapt.updateUI(articleData)
+            adapter.updateUI(articleData)
         }
 
         //NEED TO ADD IN () THE DATA

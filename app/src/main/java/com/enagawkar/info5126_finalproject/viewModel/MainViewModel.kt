@@ -1,12 +1,13 @@
 package com.enagawkar.info5126_finalproject.viewModel
 
-import android.content.Intent
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.enagawkar.info5126_finalproject.ArticleHistory
 import com.enagawkar.info5126_finalproject.model.ArticleData
 import com.google.mlkit.nl.languageid.LanguageIdentification
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
@@ -19,11 +20,11 @@ class MainViewModel : ViewModel() {
     }
 
     var listOfArticles = ArticleObject.listOfArticles
-    var langCode = ""
-
     public fun translateAndSummarize(title: String, body: String) {
-        val tempList = listOfArticles.value!!.toMutableList()
         var newArt: ArticleData? = null
+        //languages codes
+        var titleLanguage = ""
+        var bodyLanguage = ""
 
         val languageIndetif = LanguageIdentification.getClient()
         languageIndetif.identifyLanguage(title)
@@ -31,16 +32,35 @@ class MainViewModel : ViewModel() {
                 if (languageCode == "und") {
                     println("cant")
                 } else {
-                    langCode = languageCode.toString()
-                    newArt = ArticleData(languageCode, languageCode, languageCode)
-                    println(newArt)
-                    ArticleObject.addArticle(newArt)
-                    println(listOfArticles.value)
-
+                    //This must be  done because this code is done asynchronously. (if langCode is declared outside, it does not get set in time and stays empty)
+                    var langCode = languageCode
+                    titleLanguage = langCode
                 }
             }
             .addOnFailureListener {
                 println("cant load")
             }
+
+        languageIndetif.identifyLanguage(body)
+            .addOnSuccessListener { languageCode ->
+                if (languageCode == "und") {
+                    println("cant")
+                } else {
+                    //This must be  done because this code is done asynchronously. (if langCode is declared outside, it does not get set in time and stays empty)
+                    var langCode = languageCode
+                    bodyLanguage = langCode
+                }
+            }.addOnFailureListener {
+                println("cant load")
+            }
+
+
+
     }
 }
+
+//                    newArt = ArticleData(languageCode, languageCode, languageCode)
+//                    println(newArt)
+//                    ArticleObject.addArticle(newArt)
+//                    println(listOfArticles.value)
+//titleLanguage = langCode

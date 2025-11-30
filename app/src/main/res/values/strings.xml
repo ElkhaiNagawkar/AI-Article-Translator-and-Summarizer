@@ -13,5 +13,6 @@
     <string name="articleTitle">Article Title</string>
     <string name="articleInputHint">Paste your article here</string>
     <string name="TranslateAndSummarizeButton">Translate and summarize Article</string>
+    <string name="viewHistory">View all Articles</string>
     <string name="ArticleHistoryHeader"><b>Article History</b></string>
 </resources>
