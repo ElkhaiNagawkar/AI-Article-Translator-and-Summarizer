@@ -7,10 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.enagawkar.info5126_finalproject.model.ArticleData
 
-class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class RecyclerAdapter(private var data: List<ArticleData>, private val listener: RecyclerViewClickEvent) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) , View.OnClickListener {
         var headerText: TextView
         var bodyText: TextView
 
@@ -19,6 +17,14 @@ class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapte
             headerText = view.findViewById<TextView>(R.id.textView4)
             bodyText = view.findViewById<TextView>(R.id.textView5)
 
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            val position = bindingAdapterPosition
+            if(position != RecyclerView.NO_POSITION){
+                listener.onRowClick(position)
+            }
         }
     }
 
@@ -34,6 +40,8 @@ class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapte
     ) {
         viewHolder.headerText.setText((data.get(position).title).toString())
         viewHolder.bodyText.setText((data.get(position).summary).toString())
+
+
     }
 
     override fun getItemCount(): Int {
@@ -41,8 +49,9 @@ class RecyclerAdapter(private var data: List<ArticleData>) : RecyclerView.Adapte
        return data.size
     }
 
-//    public fun updateUI(newData: List<ArticleData>){
-//        data = newData
-//        notifyDataSetChanged()
-//    }
+
+
+    interface RecyclerViewClickEvent{
+        fun onRowClick(position: Int)
+    }
 }

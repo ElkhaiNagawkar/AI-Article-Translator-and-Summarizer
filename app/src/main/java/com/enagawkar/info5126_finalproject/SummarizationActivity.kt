@@ -36,7 +36,7 @@ class SummarizationActivity : AppCompatActivity() {
 
     }
     fun onClickTransAndSum(view: View){
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             mainViewModel.translateAndSummarize(
                 summarizationBinding.artcileTitle.text.toString(),
                 summarizationBinding.articleText.text.toString()

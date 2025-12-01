@@ -31,59 +31,58 @@ class MainViewModel : ViewModel() {
     var listOfArticles = ArticleObject.listOfArticles
     var newArt: ArticleData? = null
 
-
     public fun translateAndSummarize(title: String, body: String) {
-
-        val languageIndetif = LanguageIdentification.getClient()
-        languageIndetif.identifyLanguage(title)
-            .addOnSuccessListener { languageCode ->
-                if (languageCode == "und") {
-                    println("cant")
+        CoroutineScope(Dispatchers.Default).launch {
+            val languageIndetif = LanguageIdentification.getClient()
+            languageIndetif.identifyLanguage(title)
+                .addOnSuccessListener { languageCode ->
+                    if (languageCode == "und") {
+                        println("cant")
+                    } else {
+                        CoroutineScope(Dispatchers.Default).launch {
+                            newArt = translateTitleAndBody(title, body, languageCode)
+                            ArticleObject.addArticle(newArt!!)
+                        }
+                    }
                 }
-                else
-                {
-                    newArt = translateTitleAndBody(title, body, languageCode)
-                    ArticleObject.addArticle( newArt!!)
+                .addOnFailureListener {
+                    println("cant load")
                 }
-            }
-            .addOnFailureListener {
-                println("cant load")
-            }
-
-
+        }
     }
 
-    private fun translateTitleAndBody(title: String, body: String, langCode: String): ArticleData{
-        var articleToAdd: ArticleData? = ArticleData("", "", "")
+    private suspend fun translateTitleAndBody(title: String, body: String, langCode: String): ArticleData{
+        val defer = CoroutineScope(Dispatchers.Default).async {
+            var articleToAdd: ArticleData? = ArticleData("", "", "")
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.fromLanguageTag(langCode)!!)
+                .setTargetLanguage(TranslateLanguage.ENGLISH)
+                .build()
+            val Translator = Translation.getClient(options)
 
-        val options = TranslatorOptions.Builder()
-            .setSourceLanguage(TranslateLanguage.fromLanguageTag(langCode)!!)
-            .setTargetLanguage(TranslateLanguage.ENGLISH)
-            .build()
-        val Translator = Translation.getClient(options)
+            var conditions = DownloadConditions.Builder()
+                .requireWifi()
+                .build()
+            Translator.downloadModelIfNeeded(conditions)
+                .addOnSuccessListener {
+                    println("downloaded")
+                }
+                .addOnFailureListener { exception ->
+                    println("Can't Download")
+                }
 
-        var conditions = DownloadConditions.Builder()
-            .requireWifi()
-            .build()
-        Translator.downloadModelIfNeeded(conditions)
-            .addOnSuccessListener {
-                println("downloaded")
+            Translator.translate(title).addOnSuccessListener { translatedTitle ->
+                articleToAdd?.title = translatedTitle
             }
-            .addOnFailureListener { exception ->
-                println("Can't Download")
+
+            Translator.translate(body).addOnSuccessListener { translatedBody ->
+                articleToAdd?.body = translatedBody
             }
 
-        Translator.translate(title).addOnSuccessListener {
-                translatedTitle ->
-            articleToAdd?.title = translatedTitle
+            return@async articleToAdd!!
         }
 
-        Translator.translate(body).addOnSuccessListener {
-                translatedBody ->
-            articleToAdd?.body = translatedBody
-        }
-
-        return articleToAdd!!
+        return defer.await()
     }
 }
 

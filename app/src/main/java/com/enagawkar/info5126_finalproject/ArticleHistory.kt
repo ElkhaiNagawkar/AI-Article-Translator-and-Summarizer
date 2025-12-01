@@ -17,11 +17,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ArticleHistory : AppCompatActivity() {
+class ArticleHistory : AppCompatActivity(), RecyclerAdapter.RecyclerViewClickEvent {
     lateinit var recyclerViewManager: RecyclerView.LayoutManager
     lateinit var historyBinding: ActivityArticleHistoryBinding
     lateinit var mainViewModel: MainViewModel
-    lateinit var articleStuff: List<ArticleData>
+    lateinit var articleData: List<ArticleData>
+
+    override fun onRowClick(position: Int) {
+        val article = articleData[position]
+        Toast.makeText(this, article.title, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +45,11 @@ class ArticleHistory : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        articleStuff = listOf<ArticleData>()
-
-
+        articleData = listOf<ArticleData>()
 
         mainViewModel.listOfArticles.observe(this){
-            articleStuff = it
-            historyBinding.recyclerView.adapter = RecyclerAdapter(articleStuff)
+            articleData = it
+            historyBinding.recyclerView.adapter = RecyclerAdapter(articleData, this)
         }
 
     }
