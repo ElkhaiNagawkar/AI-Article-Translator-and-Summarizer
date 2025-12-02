@@ -18,7 +18,7 @@
             android:name=".ArticleHistory"
             android:exported="false" />
         <activity
-            android:name=".SummarizationActivity"
+            android:name=".TranslationActivity"
             android:exported="false" />
         <activity
             android:name=".DescriptionActivity"

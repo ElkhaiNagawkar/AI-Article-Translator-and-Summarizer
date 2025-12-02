@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.enagawkar.info5126_finalproject.databinding.ActivityMainBinding
-import com.google.mlkit.nl.languageid.LanguageIdentification
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickSummarizeActivity(view: View){
-        val intent = Intent(this, SummarizationActivity::class.java).apply { }
+        val intent = Intent(this, TranslationActivity::class.java).apply { }
         startActivity(intent)
     }
 

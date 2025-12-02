@@ -1,5 +1,7 @@
 package com.enagawkar.info5126_finalproject.viewModel
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.enagawkar.info5126_finalproject.model.ArticleData
@@ -13,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainViewModel : ViewModel() {
@@ -28,9 +31,11 @@ class MainViewModel : ViewModel() {
     }
 
     var listOfArticles = ArticleObject.listOfArticles
+    var buttonToggle = MutableLiveData<Boolean>(true)
+    var clearToggle = MutableLiveData<Boolean>(true)
     var newArt: ArticleData? = null
 
-    public fun translateAndSummarize(title: String, body: String) {
+    public fun translateAndSummarize(title: String, body: String, context: Context) {
         CoroutineScope(Dispatchers.Default).launch {
             val languageIndetif = LanguageIdentification.getClient()
             languageIndetif.identifyLanguage(title)
@@ -40,11 +45,19 @@ class MainViewModel : ViewModel() {
                     } else {
                         println("Found lang: "+languageCode)
                         CoroutineScope(Dispatchers.Default).launch {
+                            toggleButton()
                             newArt = translateTitleAndBody(title, body, languageCode)
                             ArticleObject.addArticle(newArt!!)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    context,
+                                    "Your article has been translated",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            toggleButton()
+                            clearToggle()
                         }
-
-
                     }
                 }
                 .addOnFailureListener {
@@ -91,6 +104,14 @@ class MainViewModel : ViewModel() {
         }
 
         return defer.await()
+    }
+
+    private fun toggleButton(){
+        buttonToggle.postValue(!buttonToggle.value!!)
+    }
+
+    private fun clearToggle(){
+        clearToggle.postValue(!clearToggle.value!!)
     }
 }
 

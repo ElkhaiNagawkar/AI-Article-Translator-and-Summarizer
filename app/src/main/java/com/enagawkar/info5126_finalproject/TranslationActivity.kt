@@ -2,7 +2,6 @@ package com.enagawkar.info5126_finalproject
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputFilter
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +10,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.enagawkar.info5126_finalproject.databinding.ActivitySummarizationBinding
 import com.enagawkar.info5126_finalproject.viewModel.MainViewModel
-import com.google.mlkit.nl.languageid.LanguageIdentification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SummarizationActivity : AppCompatActivity() {
+class TranslationActivity : AppCompatActivity() {
     lateinit var summarizationBinding: ActivitySummarizationBinding
     lateinit var mainViewModel: MainViewModel
 
@@ -34,12 +33,23 @@ class SummarizationActivity : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        mainViewModel.buttonToggle.observe(this){
+            toggle ->
+            summarizationBinding.transSummButton.isEnabled = toggle
+        }
+
+        mainViewModel.clearToggle.observe(this){
+            toggle ->
+            summarizationBinding.artcileTitle.setText("")
+            summarizationBinding.articleText.setText("")
+        }
     }
     fun onClickTransAndSum(view: View){
         CoroutineScope(Dispatchers.Default).launch {
             mainViewModel.translateAndSummarize(
                 summarizationBinding.artcileTitle.text.toString(),
-                summarizationBinding.articleText.text.toString()
+                summarizationBinding.articleText.text.toString(),
+                this@TranslationActivity
             )
         }
     }
