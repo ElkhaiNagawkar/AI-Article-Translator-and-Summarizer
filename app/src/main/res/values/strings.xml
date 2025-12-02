@@ -5,14 +5,14 @@
     <string name="startSummarizing">Start Summarizing</string>
     <string name="descriptionText">This app will translate
         articles from languages supported by MLKit Translation API to english.
-        It will also summarize the translated article into 1-3 bullet points.
     </string>
     <string name="HomeText">Back to Home Page</string>
-    <string name="groupMembers"><b>Group Members:\n\n</b>Name: Elkhai Nagawkar\nSection: 02\n</string>
+    <string name="groupMembers"><b>Group Members:\n\n</b>Name: Elkhai Nagawkar\nSection: 02\n\nName: Bruno Magalhaes\nSection: 03\n</string>
     <string name="summarizeTitle">Translate and Summarize Article</string>
     <string name="articleTitle">Article Title</string>
     <string name="articleInputHint">Paste your article here</string>
     <string name="TranslateAndSummarizeButton">Translate and summarize Article</string>
     <string name="viewHistory">View all Articles</string>
     <string name="ArticleHistoryHeader"><b>Article History</b></string>
+    <string name="Exit"><b>Exit</b></string>
 </resources>

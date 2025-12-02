@@ -5,30 +5,31 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ArticleHistory">
+    tools:context=".TranslatedActivity">
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Article History"
-        android:textSize="24sp"
+        android:id="@+id/articleTitleTextView"
+        android:layout_width="179dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="380dp"
-        android:layout_height="620dp"
-        android:layout_marginStart="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/exitHistoryActivityButton"
+    <TextView
+        android:id="@+id/articleBodyTextView"
+        android:layout_width="376dp"
+        android:layout_height="576dp"
+        android:layout_marginTop="32dp"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/articleTitleTextView" />
 
     <Button
-        android:id="@+id/exitHistoryActivityButton"
+        android:id="@+id/exitArticleActivityButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

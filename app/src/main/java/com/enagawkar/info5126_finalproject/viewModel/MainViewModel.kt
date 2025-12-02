@@ -1,17 +1,10 @@
 package com.enagawkar.info5126_finalproject.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.enagawkar.info5126_finalproject.model.ArticleData
 import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.genai.common.FeatureStatus
-import com.google.mlkit.genai.common.GenAiException
-import com.google.mlkit.genai.common.DownloadCallback
-import com.google.mlkit.genai.summarization.Summarization
-import com.google.mlkit.genai.summarization.SummarizationRequest
-import com.google.mlkit.genai.summarization.SummarizerOptions
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
@@ -22,7 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel : ViewModel() {
 
     //need to make a companion object (singleton) so that the same view model is used on all activities
     companion object ArticleObject {
@@ -48,8 +41,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         println("Found lang: "+languageCode)
                         CoroutineScope(Dispatchers.Default).launch {
                             newArt = translateTitleAndBody(title, body, languageCode)
-                            var s = newArt?.body
-                            summarizeBody(s!!)
                             ArticleObject.addArticle(newArt!!)
                         }
 
@@ -60,51 +51,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     println("cant load")
                 }
         }
-    }
-
-    val summarizerOptions = SummarizerOptions.builder(application)
-        .setInputType(SummarizerOptions.InputType.ARTICLE)
-        .setOutputType(SummarizerOptions.OutputType.ONE_BULLET)
-        .setLanguage(SummarizerOptions.Language.ENGLISH)
-        .build()
-    val summarizer = Summarization.getClient(summarizerOptions)
-
-    private suspend fun summarizeBody(article: String){
-
-        val featureStatus = summarizer.checkFeatureStatus().get()
-        println(featureStatus)
-        //Breaks here summarizer.checkFeatureStatus() is returning 0 which means UNAVAILABLE
-        if(featureStatus == FeatureStatus.DOWNLOADABLE) {
-
-            summarizer.downloadFeature(object : DownloadCallback {
-                override fun onDownloadStarted(bytesToDownload: Long) {
-                    println("Download started")
-                }
-
-                override fun onDownloadFailed(e: GenAiException) {
-                    println("failed u suck")
-                }
-
-                override fun onDownloadProgress(totalBytesDownloaded: Long) {
-                    println("Download going: "+totalBytesDownloaded)
-                }
-
-                override fun onDownloadCompleted() {
-                    println("downloaded sum")
-                    startSumarize(article)
-                }
-            })
-
-
-        }
-
-
-    }
-
-    private fun startSumarize(article: String){
-        val summarizationRequest = SummarizationRequest.builder(article).build()
-        var s = summarizer.runInference(summarizationRequest).get().summary
-        println(s)
     }
 
 
