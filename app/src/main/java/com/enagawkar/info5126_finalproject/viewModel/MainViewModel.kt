@@ -1,10 +1,9 @@
 package com.enagawkar.info5126_finalproject.viewModel
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.enagawkar.info5126_finalproject.ArticleHistory
 import com.enagawkar.info5126_finalproject.model.ArticleData
+import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -14,8 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+
 
 class MainViewModel : ViewModel() {
 
@@ -24,6 +22,7 @@ class MainViewModel : ViewModel() {
         var listOfArticles = MutableLiveData<List<ArticleData>>(listOf<ArticleData>())
 
         fun addArticle(article: ArticleData){
+            println(article)
             ArticleObject.listOfArticles.postValue(ArticleObject.listOfArticles.value?.toMutableList()?.apply { add(article) })
         }
     }
@@ -39,10 +38,13 @@ class MainViewModel : ViewModel() {
                     if (languageCode == "und") {
                         println("cant")
                     } else {
+                        println("Found lang: "+languageCode)
                         CoroutineScope(Dispatchers.Default).launch {
                             newArt = translateTitleAndBody(title, body, languageCode)
                             ArticleObject.addArticle(newArt!!)
                         }
+
+
                     }
                 }
                 .addOnFailureListener {
@@ -50,6 +52,7 @@ class MainViewModel : ViewModel() {
                 }
         }
     }
+
 
     private suspend fun translateTitleAndBody(title: String, body: String, langCode: String): ArticleData{
         val defer = CoroutineScope(Dispatchers.Default).async {
@@ -63,21 +66,26 @@ class MainViewModel : ViewModel() {
             var conditions = DownloadConditions.Builder()
                 .requireWifi()
                 .build()
-            Translator.downloadModelIfNeeded(conditions)
+            Tasks.await(Translator.downloadModelIfNeeded(conditions)
                 .addOnSuccessListener {
                     println("downloaded")
                 }
                 .addOnFailureListener { exception ->
                     println("Can't Download")
-                }
+                })
 
-            Translator.translate(title).addOnSuccessListener { translatedTitle ->
+            Tasks.await(Translator.translate(title).addOnSuccessListener { translatedTitle ->
                 articleToAdd?.title = translatedTitle
-            }
+            }.addOnFailureListener {
+                println("Failed")
+            })
 
-            Translator.translate(body).addOnSuccessListener { translatedBody ->
+            Tasks.await(Translator.translate(body).addOnSuccessListener { translatedBody ->
                 articleToAdd?.body = translatedBody
-            }
+            }.addOnFailureListener {
+                println("Failed")
+            })
+
 
             return@async articleToAdd!!
         }
@@ -85,6 +93,8 @@ class MainViewModel : ViewModel() {
         return defer.await()
     }
 }
+
+
 
 
 
