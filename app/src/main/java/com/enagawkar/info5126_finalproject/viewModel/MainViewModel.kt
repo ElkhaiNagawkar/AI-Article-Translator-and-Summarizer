@@ -69,7 +69,7 @@ class MainViewModel : ViewModel() {
 
     private suspend fun translateTitleAndBody(title: String, body: String, langCode: String): ArticleData{
         val defer = CoroutineScope(Dispatchers.Default).async {
-            var articleToAdd: ArticleData? = ArticleData("", "", "")
+            var articleToAdd: ArticleData? = ArticleData("", "")
             val options = TranslatorOptions.Builder()
                 .setSourceLanguage(TranslateLanguage.fromLanguageTag(langCode)!!)
                 .setTargetLanguage(TranslateLanguage.ENGLISH)

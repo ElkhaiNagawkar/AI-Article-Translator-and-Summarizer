@@ -5,6 +5,7 @@
     <string name="startTranslating">Start Translating</string>
     <string name="descriptionText">This app will translate
         articles from languages supported by MLKit Translation API to english.
+        All translated articles will be stored in a recycler view so they can be viewed anytime
     </string>
     <string name="HomeText">Back to Home Page</string>
     <string name="groupMembers"><b>Group Members:\n\n</b>Name: Elkhai Nagawkar\nSection: 02\n\nName: Bruno Magalhaes\nSection: 03\n</string>

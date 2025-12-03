@@ -10,13 +10,10 @@ import com.enagawkar.info5126_finalproject.model.ArticleData
 class RecyclerAdapter(private var data: List<ArticleData>, private val listener: RecyclerViewClickEvent) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) , View.OnClickListener {
         var headerText: TextView
-        var bodyText: TextView
 
         init {
             // Define click listener for the ViewHolder's View.
             headerText = view.findViewById<TextView>(R.id.textView4)
-            bodyText = view.findViewById<TextView>(R.id.textView5)
-
             view.setOnClickListener(this)
         }
 
@@ -39,9 +36,6 @@ class RecyclerAdapter(private var data: List<ArticleData>, private val listener:
         position: Int
     ) {
         viewHolder.headerText.setText((data.get(position).title).toString())
-        viewHolder.bodyText.setText((data.get(position).summary).toString())
-
-
     }
 
     override fun getItemCount(): Int {
