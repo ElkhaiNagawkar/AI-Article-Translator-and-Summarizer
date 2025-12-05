@@ -35,7 +35,7 @@ class MainViewModel : ViewModel() {
     var clearToggle = MutableLiveData<Boolean>(true)
     var newArt: ArticleData? = null
 
-    public fun translateAndSummarize(title: String, body: String, context: Context) {
+    public fun translateArticle(title: String, body: String, context: Context) {
         CoroutineScope(Dispatchers.Default).launch {
             val languageIndetif = LanguageIdentification.getClient()
             languageIndetif.identifyLanguage(title)
@@ -89,6 +89,7 @@ class MainViewModel : ViewModel() {
 
             Tasks.await(Translator.translate(title).addOnSuccessListener { translatedTitle ->
                 articleToAdd?.title = translatedTitle
+
             }.addOnFailureListener {
                 println("Failed")
             })
@@ -99,7 +100,7 @@ class MainViewModel : ViewModel() {
                 println("Failed")
             })
 
-
+            Translator.close()
             return@async articleToAdd!!
         }
 
